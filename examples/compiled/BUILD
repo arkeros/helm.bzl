@@ -19,4 +19,8 @@ helm_template(
     chart = "@opentelemetry_collector",
     namespace = "observability",
     release_name = "otel-collector",
+    set = {
+        "image.repository": "otel/opentelemetry-collector-contrib",
+        "mode": "daemonset",
+    },
 )

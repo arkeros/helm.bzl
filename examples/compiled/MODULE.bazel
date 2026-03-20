@@ -29,10 +29,7 @@ go_sdk.from_file(go_mod = "//:go.mod")
 
 go_deps = use_extension("@gazelle//:extensions.bzl", "go_deps")
 go_deps.from_file(go_mod = "//:go.mod")
-use_repo(
-    go_deps,
-    "sh_helm_helm_v3",
-)
+use_repo(go_deps, "sh_helm_helm_v3")
 
 # Declare a chart to render
 helm = use_extension("@helm.bzl//helm:extensions.bzl", "helm")

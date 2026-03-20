@@ -3,14 +3,6 @@
 Compiles helm from Go source using `rules_go` and registers it as a custom toolchain.
 This provides fully hermetic builds — no pre-built binary download needed.
 
-## Setup
-
-Generate Go dependencies:
-
-```bash
-go mod tidy
-```
-
 ## Usage
 
 ```bash
