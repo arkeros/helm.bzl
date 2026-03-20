@@ -1,0 +1,36 @@
+"""Simple example: render a Helm chart using a pre-built helm binary."""
+
+module(
+    name = "helm_simple_example",
+    version = "0.0.0",
+)
+
+bazel_dep(name = "helm.bzl", version = "0.0.0")
+local_path_override(
+    module_name = "helm.bzl",
+    path = "../..",
+)
+
+helm = use_extension("@helm.bzl//helm:extensions.bzl", "helm")
+
+# Pre-built helm binary
+helm.toolchain(version = "3.17.0")
+use_repo(helm, "helm_toolchains")
+
+register_toolchains("@helm_toolchains//:all")
+
+# Declare a chart repository
+helm.repo(
+    name = "open_telemetry",
+    url = "https://github.com/open-telemetry/opentelemetry-helm-charts/releases/download/opentelemetry-collector-0.132.0",
+)
+
+# Download a chart
+helm.chart(
+    name = "opentelemetry_collector",
+    chart = "opentelemetry-collector",
+    digest = "sha256:0ce3dabce3994c028cfde426f466e32ad4265a89664a75963a7d96e50f638cfe",
+    repo = "open_telemetry",
+    version = "0.132.0",
+)
+use_repo(helm, "opentelemetry_collector")

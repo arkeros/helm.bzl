@@ -1,0 +1,12 @@
+image:
+  repository: otel/opentelemetry-collector-contrib
+
+mode: daemonset
+
+service:
+  enabled: true
+
+resources:
+  limits:
+    cpu: 1
+    memory: 1Gi

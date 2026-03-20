@@ -177,6 +177,14 @@ toolchain(
 register_toolchains("//path/to:helm_toolchain")
 ```
 
+## Examples
+
+See the [`examples/`](examples/) directory:
+
+- [`examples/simple/`](examples/simple/) - Pre-built helm binary with HTTP chart (values file, Starlark dict, dot-notation)
+- [`examples/oci/`](examples/oci/) - Download and render a chart from an OCI registry
+- [`examples/compiled/`](examples/compiled/) - Compile helm from Go source for fully hermetic builds
+
 ## License
 
 Apache License 2.0

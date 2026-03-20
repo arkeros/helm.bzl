@@ -1,0 +1,31 @@
+"""OCI example: download a Helm chart from an OCI registry."""
+
+module(
+    name = "helm_oci_example",
+    version = "0.0.0",
+)
+
+bazel_dep(name = "helm.bzl", version = "0.0.0")
+local_path_override(
+    module_name = "helm.bzl",
+    path = "../..",
+)
+
+helm = use_extension("@helm.bzl//helm:extensions.bzl", "helm")
+
+# Pre-built helm binary
+helm.toolchain(version = "3.17.0")
+use_repo(helm, "helm_toolchains")
+
+register_toolchains("@helm_toolchains//:all")
+
+# Download a chart from an OCI registry (GitHub Container Registry)
+helm.oci_chart(
+    name = "atlas_operator",
+    chart = "atlas-operator",
+    digest = "sha256:0f5e350de5e7ed5b0734b02f372bd7fdf6c1300380ccc907666b34a922c11c9a",
+    registry = "ghcr.io",
+    repository = "ariga/charts/atlas-operator",
+    version = "0.7.19",
+)
+use_repo(helm, "atlas_operator")

@@ -1,0 +1,50 @@
+"""Compiled example: build helm from Go source and register as custom toolchain."""
+
+module(
+    name = "helm_compiled_example",
+    version = "0.0.0",
+)
+
+bazel_dep(name = "helm.bzl", version = "0.0.0")
+local_path_override(
+    module_name = "helm.bzl",
+    path = "../..",
+)
+
+# Register custom compiled toolchain (not extension-based)
+register_toolchains("//:helm_toolchain")
+
+# Go tooling for compiling helm
+bazel_dep(name = "rules_go", version = "0.59.0")
+bazel_dep(name = "gazelle", version = "0.47.0")
+bazel_dep(name = "lazy_bazel_env.bzl", version = "0.0.0")
+git_override(
+    module_name = "lazy_bazel_env.bzl",
+    commit = "55685e5",
+    remote = "https://github.com/arkeros/lazy_bazel_env.bzl.git",
+)
+
+go_sdk = use_extension("@rules_go//go:extensions.bzl", "go_sdk")
+go_sdk.from_file(go_mod = "//:go.mod")
+
+go_deps = use_extension("@gazelle//:extensions.bzl", "go_deps")
+go_deps.from_file(go_mod = "//:go.mod")
+use_repo(
+    go_deps,
+    "sh_helm_helm_v3",
+)
+
+# Declare a chart to render
+helm = use_extension("@helm.bzl//helm:extensions.bzl", "helm")
+helm.repo(
+    name = "open_telemetry",
+    url = "https://github.com/open-telemetry/opentelemetry-helm-charts/releases/download/opentelemetry-collector-0.132.0",
+)
+helm.chart(
+    name = "opentelemetry_collector",
+    chart = "opentelemetry-collector",
+    digest = "sha256:0ce3dabce3994c028cfde426f466e32ad4265a89664a75963a7d96e50f638cfe",
+    repo = "open_telemetry",
+    version = "0.132.0",
+)
+use_repo(helm, "opentelemetry_collector")
